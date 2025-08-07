@@ -21,6 +21,12 @@ export default defineConfig({
   },
   server: {
     // @ts-ignore
+    port: 5173,
+    host: '0.0.0.0',
+    strictPort: true,
+    hmr: {
+      overlay: true,
+    },
     allowedHosts: true,
   }
 });
