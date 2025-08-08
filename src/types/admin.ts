@@ -196,3 +196,90 @@ export interface AdminStats {
     averageRating: number;
     activePromotions: number;
 }
+export interface Booking {
+    id: string;
+    customerId: string;
+    hotelId: string;
+    roomId: string;
+    checkInDate: Date;
+    checkOutDate: Date;
+    status: 'pending' | 'confirmed' | 'canceled';
+    createdAt: Date;
+    updatedAt: Date;
+}
+export interface BookingReport {
+    id: string;
+    hotelId: string;
+    startDate: Date;
+    endDate: Date;
+    totalBookings: number;
+    totalRevenue: number;
+    averageStayDuration: number;
+    occupancyRate: number;
+    createdAt: Date;
+    updatedAt: Date;
+}
+export interface BookingManagement {
+    id: string;
+    bookingId: string;
+    action: 'confirm' | 'cancel' | 'modify';
+    performedBy: string; // Admin ID
+    performedAt: Date;
+    notes?: string;
+}
+export interface InvoiceManagement{
+    id: string;
+    bookingId: string;
+    customerId: string;
+    amount: number;
+    status: 'paid' | 'unpaid' | 'refunded';
+    issuedAt: Date;
+    dueDate: Date;
+    paymentMethod: 'credit_card' | 'bank_transfer' | 'cash';
+    createdAt: Date;
+    updatedAt: Date;
+}
+export interface Invoice {
+    id: string;
+    invoiceNumber: string;
+    customerId: string;
+    customerName: string;
+    customerEmail: string;
+    hotelId: string;
+    hotelName: string;
+    bookingId: string;
+    issueDate: Date;
+    dueDate: Date;
+    items: InvoiceItem[];
+    subtotal: number;
+    taxAmount: number;
+    discountAmount: number;
+    totalAmount: number;
+    paidAmount: number;
+    balanceAmount: number;
+    status: "draft" | "sent" | "paid" | "overdue" | "cancelled";
+    paymentStatus: "pending" | "partial" | "paid" | "failed";
+    paymentMethod?: string;
+    paymentDate?: Date;
+    notes?: string;
+    createdAt: Date;
+    updatedAt: Date;
+}
+
+export interface InvoiceItem {
+    id: string;
+    description: string;
+    quantity: number;
+    unitPrice: number;
+    totalPrice: number;
+    type: "room" | "service" | "food" | "tax" | "discount";
+}
+export interface Transaction {
+    id: string;
+    user: string;
+    amount: number;
+    method: string;
+    status: 'Pending' | 'Completed' | 'Failed' | 'Processing';
+    date: string;
+}
+

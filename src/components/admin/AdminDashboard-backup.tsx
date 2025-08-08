@@ -35,15 +35,9 @@ import TaxManagement from './TaxManagement';
 import CouponManagement from './CouponManagement';
 import type { AdminStats } from '@/types/admin';
 import BookingReport from './BookingReport';
-import BookingsManagement from './BookingsManagement';
 import BookingCalendar from './BookingCalendar';
-import InvoicesManagement from './InvoicesManagement';
-import ContentManagement from './WebsiteContentManagement';
-import BlogManagement from './BlogManagement';
-import PaymentMethods from './PaymentMethods';
-import PaymentTransactions from './PaymentTransactions';
-import SettingsComponent from './Settings';
-import { Transaction } from '@/types/admin';
+import BookingManagement from './BookingsManagement';
+import BookingsManagement from './BookingsManagement';
 
 const AdminDashboard = () => {
     const [activeTab, setActiveTab] = useState('overview');
@@ -120,7 +114,7 @@ const AdminDashboard = () => {
 
             <div className="flex">
                 {/* Sidebar */}
-                <aside className="w-64 bg-zinc-900/50 border-r border-zinc-800 min-h-screen">
+                <aside className="w-64 bg-zinc-900/50 border-r border-zinc-800 min-h-screen">                    
                     <nav className="p-4 space-y-2">
                         {/* Hotel Management */}
                         <div className="p-4 border-b border-zinc-800">
@@ -133,8 +127,8 @@ const AdminDashboard = () => {
                                     key={item.id}
                                     onClick={() => setActiveTab(item.id)}
                                     className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg text-left transition-colors ${activeTab === item.id
-                                        ? 'bg-violet-900/30 text-violet-300 border border-violet-800/50'
-                                        : 'text-zinc-400 hover:text-white hover:bg-zinc-800/50'
+                                            ? 'bg-violet-900/30 text-violet-300 border border-violet-800/50'
+                                            : 'text-zinc-400 hover:text-white hover:bg-zinc-800/50'
                                         }`}
                                 >
                                     <Icon className="h-4 w-4" />
@@ -162,7 +156,7 @@ const AdminDashboard = () => {
                             className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg text-left transition-colors ${activeTab === 'bookingsManagement'
                                 ? 'bg-violet-900/30 text-violet-300 border border-violet-800/50'
                                 : 'text-zinc-400 hover:text-white hover:bg-zinc-800/50'
-                                }`}
+                            }`}
                         >
                             <BarChart3 className="h-4 w-4" />
                             <span className="text-sm">Bookings Management</span>
@@ -172,74 +166,10 @@ const AdminDashboard = () => {
                             className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg text-left transition-colors ${activeTab === 'bookingReports'
                                 ? 'bg-violet-900/30 text-violet-300 border border-violet-800/50'
                                 : 'text-zinc-400 hover:text-white hover:bg-zinc-800/50'
-                                }`}
+                            }`}
                         >
                             <BarChart3 className="h-4 w-4" />
                             <span className="text-sm">Bookings Report</span>
-                        </button>
-                        <button
-                            onClick={() => setActiveTab('invoicesManagement')}
-                            className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg text-left transition-colors ${activeTab === 'invoicesManagement'
-                                ? 'bg-violet-900/30 text-violet-300 border border-violet-800/50'
-                                : 'text-zinc-400 hover:text-white hover:bg-zinc-800/50'
-                                }`}
-                        >
-                            <BarChart3 className="h-4 w-4" />
-                            <span className="text-sm">Invoices Management</span>
-                        </button>
-                        {/* Website Content & Settings */}
-                        <div className="p-4 border-t border-zinc-800">
-                            <h2 className="text-lg font-semibold text-white mb-2">Contents & Settings:</h2>
-                        </div>
-                        <button
-                            onClick={() => setActiveTab('contentManagement')}
-                            className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg text-left transition-colors ${activeTab === 'contentManagement'
-                                ? 'bg-violet-900/30 text-violet-300 border border-violet-800/50'
-                                : 'text-zinc-400 hover:text-white hover:bg-zinc-800/50'
-                                }`}
-                        >
-                            <Settings className="h-4 w-4" />
-                            <span className="text-sm">Content Management</span>
-                        </button>
-                        <button
-                            onClick={() => setActiveTab('BlogManagement')}
-                            className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg text-left transition-colors ${activeTab === 'BlogManagement'
-                                ? 'bg-violet-900/30 text-violet-300 border border-violet-800/50'
-                                : 'text-zinc-400 hover:text-white hover:bg-zinc-800/50'
-                                }`}
-                        >
-                            <Settings className="h-4 w-4" />
-                            <span className="text-sm">Blog Management</span>
-                        </button>
-                        <button
-                            onClick={() => setActiveTab('paymentMethods')}
-                            className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg text-left transition-colors ${activeTab === 'paymentMethods'
-                                ? 'bg-violet-900/30 text-violet-300 border border-violet-800/50'
-                                : 'text-zinc-400 hover:text-white hover:bg-zinc-800/50'
-                                }`}
-                        >
-                            <Settings className="h-4 w-4" />
-                            <span className="text-sm">Payment Methods</span>
-                        </button>
-                        <button
-                            onClick={() => setActiveTab('paymentTransactions')}
-                            className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg text-left transition-colors ${activeTab === 'paymentTransactions'
-                                ? 'bg-violet-900/30 text-violet-300 border border-violet-800/50'
-                                : 'text-zinc-400 hover:text-white hover:bg-zinc-800/50'
-                                }`}
-                        >
-                            <Settings className="h-4 w-4" />
-                            <span className="text-sm">Payment Transactions</span>
-                        </button>
-                        <button
-                            onClick={() => setActiveTab('settings')}
-                            className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg text-left transition-colors ${activeTab === 'settings'
-                                ? 'bg-violet-900/30 text-violet-300 border border-violet-800/50'
-                                : 'text-zinc-400 hover:text-white hover:bg-zinc-800/50'
-                                }`}
-                        >
-                            <Settings className="h-4 w-4" />
-                            <span className="text-sm">Settings</span>
                         </button>
                     </nav>
                 </aside>
@@ -353,9 +283,9 @@ const AdminDashboard = () => {
                                         </Button>
                                     </div>
                                 </CardContent>
-                            </Card>
+                            </Card>                           
                         </motion.div>
-                    )}
+                    )}                   
 
                     {activeTab === 'hotels' && <HotelManagement />}
                     {activeTab === 'rooms' && <RoomManagement />}
@@ -373,14 +303,6 @@ const AdminDashboard = () => {
                     {activeTab === 'bookingCalendar' && <BookingCalendar />}
                     {activeTab === 'bookingsManagement' && <BookingsManagement />}
                     {activeTab === 'bookingReports' && <BookingReport />}
-                    {activeTab === 'invoicesManagement' && <InvoicesManagement />}
-
-                    {activeTab === 'contentManagement' && <ContentManagement />}
-                    {activeTab === 'BlogManagement' && <BlogManagement />}
-                    {activeTab === 'paymentMethods' && <PaymentMethods />}
-                    {activeTab === 'paymentTransactions' && <PaymentTransactions />}
-                    {activeTab === 'settings' && <SettingsComponent />}
-
                 </main>
             </div>
         </div>

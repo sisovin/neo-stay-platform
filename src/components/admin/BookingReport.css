@@ -1,0 +1,8 @@
+
+.bar-gradient {
+    background: linear-gradient(to top, #7c3aed, #22d3ee);
+    /* from-violet-600 to-cyan-400 */
+    height: var(--bar-height, 100px);
+    width: var(--bar-width, 40px);
+    transition: height 0.3s, width 0.3s;
+}

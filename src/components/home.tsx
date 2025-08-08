@@ -58,9 +58,21 @@ const Home = () => {
               >
                 About
               </a>
+              <a 
+                href="#"
+                className="text-sm hover:text-cyan-400 transition-colors"
+              >
+                Contact
+              </a>
             </div>
           </div>
           <div className="flex items-center gap-4">
+            <a
+              href="/admin"
+              className="text-sm hover:text-cyan-400 transition-colors"
+            >
+              Dashboard
+            </a>
             <Button
               variant="ghost"
               className="hidden md:flex hover:text-cyan-400 transition-colors"

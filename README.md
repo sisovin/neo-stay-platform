@@ -151,6 +151,12 @@
 2. **Install dependencies:**
     ```bash
     npm install
+    npm install @heroicons/react
+    npm install @heroicons/react@latest
+    npm install @chakra-ui/react @emotion/react @emotion/styled framer-motion    
+    npm install react-qr-reader
+    npm install --save-dev @types/react-qr-reader
+
     ```
 
 3. **Configure environment variables:**

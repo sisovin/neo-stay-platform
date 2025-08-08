@@ -16,11 +16,28 @@ import {
 
 export default function DatePickerWithRange({
   className,
-}: React.HTMLAttributes<HTMLDivElement>) {
-  const [date, setDate] = React.useState<DateRange | undefined>({
+  value,
+  onChange,
+}: React.HTMLAttributes<HTMLDivElement> & {
+  value?: DateRange | undefined;
+  onChange?: (range: DateRange | undefined) => void;
+}) {
+  // Internal state for uncontrolled usage
+  const [internalDate, setInternalDate] = React.useState<DateRange | undefined>({
     from: new Date(2022, 0, 20),
     to: addDays(new Date(2022, 0, 20), 20),
   });
+
+  // Prefer controlled value when provided
+  const selectedDate = value !== undefined ? value : internalDate;
+
+  const handleSelect = (range: DateRange | undefined) => {
+    if (onChange) {
+      onChange(range);
+    } else {
+      setInternalDate(range);
+    }
+  };
 
   return (
     <div className={cn("grid gap-2", className)}>
@@ -31,18 +48,18 @@ export default function DatePickerWithRange({
             variant={"outline"}
             className={cn(
               "w-[300px] justify-start text-left font-normal",
-              !date && "text-muted-foreground",
+              !selectedDate && "text-muted-foreground",
             )}
           >
             <CalendarIcon className="mr-2 h-4 w-4" />
-            {date?.from ? (
-              date.to ? (
+            {selectedDate?.from ? (
+              selectedDate.to ? (
                 <>
-                  {format(date.from, "LLL dd, y")} -{" "}
-                  {format(date.to, "LLL dd, y")}
+                  {format(selectedDate.from, "LLL dd, y")} -{" "}
+                  {format(selectedDate.to, "LLL dd, y")}
                 </>
               ) : (
-                format(date.from, "LLL dd, y")
+                format(selectedDate.from, "LLL dd, y")
               )
             ) : (
               <span>Pick a date</span>
@@ -53,9 +70,9 @@ export default function DatePickerWithRange({
           <Calendar
             initialFocus
             mode="range"
-            defaultMonth={date?.from}
-            selected={date}
-            onSelect={setDate}
+            defaultMonth={selectedDate?.from}
+            selected={selectedDate}
+            onSelect={handleSelect}
             numberOfMonths={2}
           />
         </PopoverContent>
