@@ -40,10 +40,12 @@ import BookingCalendar from './BookingCalendar';
 import InvoicesManagement from './InvoicesManagement';
 import ContentManagement from './WebsiteContentManagement';
 import BlogManagement from './BlogManagement';
-import PaymentMethods from './PaymentMethods';
+import GalleriesManagement from './GalleriesManagement';
+import TestimonialsManagement from './TestimonialsManagement';
+import PaymentMethodsManagement from './PaymentMethodsManagement';
 import PaymentTransactions from './PaymentTransactions';
+import ContactManagement from './ContactManagement';
 import SettingsComponent from './Settings';
-import { Transaction } from '@/types/admin';
 
 const AdminDashboard = () => {
     const [activeTab, setActiveTab] = useState('overview');
@@ -212,8 +214,28 @@ const AdminDashboard = () => {
                             <span className="text-sm">Blog Management</span>
                         </button>
                         <button
-                            onClick={() => setActiveTab('paymentMethods')}
-                            className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg text-left transition-colors ${activeTab === 'paymentMethods'
+                            onClick={() => setActiveTab('galleriesManagement')}
+                            className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg text-left transition-colors ${activeTab === 'galleriesManagement'
+                                ? 'bg-violet-900/30 text-violet-300 border border-violet-800/50'
+                                : 'text-zinc-400 hover:text-white hover:bg-zinc-800/50'
+                                }`}
+                        >
+                            <Settings className="h-4 w-4" />
+                            <span className="text-sm">Galleries Management</span>
+                        </button>
+                        <button 
+                            onClick={() => setActiveTab('testimonialsManagement')}
+                            className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg text-left transition-colors ${activeTab === 'testimonialsManagement'
+                                ? 'bg-violet-900/30 text-violet-300 border border-violet-800/50'
+                                : 'text-zinc-400 hover:text-white hover:bg-zinc-800/50'
+                                }`}
+                        >
+                            <Settings className="h-4 w-4" />
+                            <span className="text-sm">Testimonials Management</span>
+                        </button>
+                        <button
+                            onClick={() => setActiveTab('paymentMethodsManagement')}
+                            className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg text-left transition-colors ${activeTab === 'paymentMethodsManagement'
                                 ? 'bg-violet-900/30 text-violet-300 border border-violet-800/50'
                                 : 'text-zinc-400 hover:text-white hover:bg-zinc-800/50'
                                 }`}
@@ -230,6 +252,16 @@ const AdminDashboard = () => {
                         >
                             <Settings className="h-4 w-4" />
                             <span className="text-sm">Payment Transactions</span>
+                        </button>
+                        <button
+                            onClick={() => setActiveTab('contactManagement')}
+                            className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg text-left transition-colors ${activeTab === 'contactManagement'
+                                ? 'bg-violet-900/30 text-violet-300 border border-violet-800/50'
+                                : 'text-zinc-400 hover:text-white hover:bg-zinc-800/50'
+                                }`}
+                        >
+                            <Settings className="h-4 w-4" />
+                            <span className="text-sm">Contact Management</span>
                         </button>
                         <button
                             onClick={() => setActiveTab('settings')}
@@ -377,8 +409,11 @@ const AdminDashboard = () => {
 
                     {activeTab === 'contentManagement' && <ContentManagement />}
                     {activeTab === 'BlogManagement' && <BlogManagement />}
-                    {activeTab === 'paymentMethods' && <PaymentMethods />}
+                    {activeTab === 'galleriesManagement' && <GalleriesManagement />}
+                    {activeTab === 'testimonialsManagement' && <TestimonialsManagement />}
+                    {activeTab === 'paymentMethodsManagement' && <PaymentMethodsManagement />}
                     {activeTab === 'paymentTransactions' && <PaymentTransactions />}
+                    {activeTab === 'contactManagement' && <ContactManagement />}
                     {activeTab === 'settings' && <SettingsComponent />}
 
                 </main>

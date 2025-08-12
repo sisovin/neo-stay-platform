@@ -1,336 +1,225 @@
-import React, { useState } from 'react';
-import styles from './BlogManagement.module.css';
+import React, { useState } from "react";
+import { motion } from "framer-motion";
+import {
+    FileText,
+    FolderOpen,
+    Tag,
+    Plus,
+    Eye,
+    Heart,
+    MessageCircle,
+    TrendingUp,
+} from "lucide-react";
+import { Button } from "@/components/ui/button";
+import {
+    Card,
+    CardContent,
+    CardDescription,
+    CardHeader,
+    CardTitle,
+} from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import BlogPostManagement from "./BlogPostManagement";
+import BlogCategoryManagement from "./BlogCategoryManagement";
+import BlogTagManagement from "./BlogTagManagement";
 
-// Status Badge Component
-const StatusBadge: React.FC<{ status: string }> = ({ status }) => {
-    let badgeClass = styles.badge;
-    if (status === 'success') badgeClass += ` ${styles.successBadge}`;
-    else if (status === 'pending') badgeClass += ` ${styles.pendingBadge}`;
-    else if (status === 'failed') badgeClass += ` ${styles.failedBadge}`;
-
-    return <span className={badgeClass}>{status}</span>;
-};
-
-// Data Table Component
-const DataTable: React.FC<{
-    columns: { id: string; label: string }[];
-    rows: any[];
-    onRowClick?: (row: any) => void;
-}> = ({ columns, rows, onRowClick }) => {
-    return (
-        <div className={styles.tableContainer}>
-            <table className={styles.table}>
-                <thead>
-                    <tr>
-                        {columns.map((column) => (
-                            <th key={column.id} className={styles.tableHeader}>
-                                {column.label}
-                            </th>
-                        ))}
-                    </tr>
-                </thead>
-                <tbody>
-                    {rows.map((row, index) => (
-                        <tr
-                            key={index}
-                            className={styles.tableRow}
-                            onClick={() => onRowClick && onRowClick(row)}
-                        >
-                            {columns.map((column) => (
-                                <td key={column.id} className={styles.tableCell}>
-                                    {row[column.id]}
-                                </td>
-                            ))}
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
-        </div>
-    );
-};
-
-// Blog Component
 const BlogManagement = () => {
-    // Blog Posts State
-    const [posts, setPosts] = useState([
-        { id: 1, title: 'Modern Hotel Design', author: 'Admin', date: '2023-04-05', status: 'published' },
-        { id: 2, title: 'Sustainable Practices', author: 'Admin', date: '2023-03-22', status: 'draft' },
-    ]);
+    const [activeTab, setActiveTab] = useState("overview");
 
-    // Edit Modal State
-    const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-    const [editingPost, setEditingPost] = useState<any>(null);
-    const [editForm, setEditForm] = useState({
-        title: '',
-        author: '',
-        date: '',
-        status: 'draft'
-    });
-
-    // Categories State
-    const [categories, setCategories] = useState([
-        { id: 1, name: 'Travel Tips', description: 'Tips for travelers', status: 'active' },
-        { id: 2, name: 'Hotel News', description: 'Latest hotel updates', status: 'inactive' },
-    ]);
-
-    // Tags State
-    const [tags, setTags] = useState([
-        { id: 1, name: 'Sustainability', slug: 'sustainability' },
-        { id: 2, name: 'Luxury', slug: 'luxury' },
-    ]);
-
-    // Handle Post Actions
-    const handlePostEdit = (id: number) => {
-        const postToEdit = posts.find(post => post.id === id);
-        if (postToEdit) {
-            setEditingPost(postToEdit);
-            setEditForm({
-                title: postToEdit.title,
-                author: postToEdit.author,
-                date: postToEdit.date,
-                status: postToEdit.status
-            });
-            setIsEditModalOpen(true);
-        }
+    // Mock blog stats
+    const blogStats = {
+        totalPosts: 156,
+        publishedPosts: 142,
+        draftPosts: 14,
+        totalCategories: 12,
+        totalTags: 48,
+        totalViews: 45680,
+        totalLikes: 3420,
+        totalComments: 892,
     };
 
-    const handleSaveEdit = () => {
-        if (editingPost) {
-            setPosts(posts.map(post =>
-                post.id === editingPost.id
-                    ? { ...post, ...editForm }
-                    : post
-            ));
-            setIsEditModalOpen(false);
-            setEditingPost(null);
-            setEditForm({ title: '', author: '', date: '', status: 'draft' });
-        }
-    };
-
-    const handleCancelEdit = () => {
-        setIsEditModalOpen(false);
-        setEditingPost(null);
-        setEditForm({ title: '', author: '', date: '', status: 'draft' });
-    };
-
-    const handleInputChange = (field: string, value: string) => {
-        setEditForm(prev => ({
-            ...prev,
-            [field]: value
-        }));
-    };
-
-    const handlePostDelete = (id: number) => {
-        setPosts(posts.filter(post => post.id !== id));
-    };
-
-    // Handle Category Actions
-    const handleCategoryEdit = (id: number) => {
-        alert(`Edit category ${id}`);
-    };
-
-    const handleCategoryDelete = (id: number) => {
-        setCategories(categories.filter(category => category.id !== id));
-    };
-
-    // Handle Tag Actions
-    const handleTagEdit = (id: number) => {
-        alert(`Edit tag ${id}`);
-    };
-
-    const handleTagDelete = (id: number) => {
-        setTags(tags.filter(tag => tag.id !== id));
-    };
+    const StatCard = ({
+        title,
+        value,
+        description,
+        icon: Icon,
+        color,
+    }: {
+        title: string;
+        value: string | number;
+        description: string;
+        icon: any;
+        color: string;
+    }) => (
+        <Card className="bg-zinc-900/50 border-zinc-800">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium text-zinc-300">
+                    {title}
+                </CardTitle>
+                <Icon className={`h-4 w-4 ${color}`} />
+            </CardHeader>
+            <CardContent>
+                <div className="text-2xl font-bold text-white">{value}</div>
+                <p className="text-xs text-zinc-500">{description}</p>
+            </CardContent>
+        </Card>
+    );
 
     return (
-        <div className={styles.container}>
-            <div className={styles.header}>
-                <h2 className={styles.title}>Blog Management</h2>
-            </div>
+        <div className="bg-black min-h-screen">
+            <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5 }}
+                className="space-y-6"
+            >
+                <div>
+                    <h1 className="text-3xl font-bold mb-2 text-white">Blog Management</h1>
+                    <p className="text-zinc-400">
+                        Manage your blog content, categories, and tags
+                    </p>
+                </div>
 
-            {/* Edit Post Modal */}
-            {isEditModalOpen && (
-                <>
-                    <div className={styles.modalOverlay} onClick={handleCancelEdit}></div>
+                <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
+                    <TabsList className="bg-zinc-900/50 border border-zinc-800">
+                        <TabsTrigger
+                            value="overview"
+                            className="data-[state=active]:bg-violet-900/30 data-[state=active]:text-violet-300"
+                        >
+                            Overview
+                        </TabsTrigger>
+                        <TabsTrigger
+                            value="posts"
+                            className="data-[state=active]:bg-violet-900/30 data-[state=active]:text-violet-300"
+                        >
+                            Posts
+                        </TabsTrigger>
+                        <TabsTrigger
+                            value="categories"
+                            className="data-[state=active]:bg-violet-900/30 data-[state=active]:text-violet-300"
+                        >
+                            Categories
+                        </TabsTrigger>
+                        <TabsTrigger
+                            value="tags"
+                            className="data-[state=active]:bg-violet-900/30 data-[state=active]:text-violet-300"
+                        >
+                            Tags
+                        </TabsTrigger>
+                    </TabsList>
 
-                    <div className={styles.modal}>
-                        <div className={styles.modalHeader}>
-                            <h3>Edit Blog Post</h3>
-                            <span
-                                className={styles.modalClose}
-                                onClick={handleCancelEdit}
-                                role="button"
-                                tabIndex={0}
-                                onKeyDown={(e) => e.key === 'Enter' && handleCancelEdit()}
-                            >
-                                ×
-                            </span>
-                        </div>
-
-                        <div className={styles.formGroup}>
-                            <label className={styles.formLabel} htmlFor="edit-title">Title</label>
-                            <input
-                                id="edit-title"
-                                type="text"
-                                className={styles.input}
-                                value={editForm.title}
-                                onChange={(e) => handleInputChange('title', e.target.value)}
-                                placeholder="Enter post title"
+                    <TabsContent value="overview" className="space-y-6">
+                        {/* Blog Stats */}
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                            <StatCard
+                                title="Total Posts"
+                                value={blogStats.totalPosts}
+                                description="All blog posts"
+                                icon={FileText}
+                                color="text-cyan-400"
+                            />
+                            <StatCard
+                                title="Published Posts"
+                                value={blogStats.publishedPosts}
+                                description="Live on website"
+                                icon={Eye}
+                                color="text-green-400"
+                            />
+                            <StatCard
+                                title="Categories"
+                                value={blogStats.totalCategories}
+                                description="Content categories"
+                                icon={FolderOpen}
+                                color="text-violet-400"
+                            />
+                            <StatCard
+                                title="Tags"
+                                value={blogStats.totalTags}
+                                description="Content tags"
+                                icon={Tag}
+                                color="text-yellow-400"
+                            />
+                            <StatCard
+                                title="Total Views"
+                                value={blogStats.totalViews.toLocaleString()}
+                                description="All time views"
+                                icon={TrendingUp}
+                                color="text-blue-400"
+                            />
+                            <StatCard
+                                title="Total Likes"
+                                value={blogStats.totalLikes.toLocaleString()}
+                                description="Reader engagement"
+                                icon={Heart}
+                                color="text-pink-400"
+                            />
+                            <StatCard
+                                title="Comments"
+                                value={blogStats.totalComments}
+                                description="Reader feedback"
+                                icon={MessageCircle}
+                                color="text-orange-400"
+                            />
+                            <StatCard
+                                title="Draft Posts"
+                                value={blogStats.draftPosts}
+                                description="Unpublished content"
+                                icon={FileText}
+                                color="text-zinc-400"
                             />
                         </div>
 
-                        <div className={styles.formGroup}>
-                            <label className={styles.formLabel} htmlFor="edit-author">Author</label>
-                            <input
-                                id="edit-author"
-                                type="text"
-                                className={styles.input}
-                                value={editForm.author}
-                                onChange={(e) => handleInputChange('author', e.target.value)}
-                                placeholder="Enter author name"
-                            />
-                        </div>
+                        {/* Quick Actions */}
+                        <Card className="bg-zinc-900/50 border-zinc-800">
+                            <CardHeader>
+                                <CardTitle className="text-white">Quick Actions</CardTitle>
+                                <CardDescription className="text-zinc-400">
+                                    Common blog management tasks
+                                </CardDescription>
+                            </CardHeader>
+                            <CardContent>
+                                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                    <Button
+                                        onClick={() => setActiveTab("posts")}
+                                        className="bg-gradient-to-r from-violet-600 to-cyan-500 hover:from-violet-700 hover:to-cyan-600"
+                                    >
+                                        <Plus className="h-4 w-4 mr-2" />
+                                        Create New Post
+                                    </Button>
+                                    <Button
+                                        onClick={() => setActiveTab("categories")}
+                                        variant="outline"
+                                        className="border-zinc-700 hover:bg-zinc-800"
+                                    >
+                                        <FolderOpen className="h-4 w-4 mr-2" />
+                                        Manage Categories
+                                    </Button>
+                                    <Button
+                                        onClick={() => setActiveTab("tags")}
+                                        variant="outline"
+                                        className="border-zinc-700 hover:bg-zinc-800"
+                                    >
+                                        <Tag className="h-4 w-4 mr-2" />
+                                        Manage Tags
+                                    </Button>
+                                </div>
+                            </CardContent>
+                        </Card>
+                    </TabsContent>
 
-                        <div className={styles.formGroup}>
-                            <label className={styles.formLabel} htmlFor="edit-date">Date</label>
-                            <input
-                                id="edit-date"
-                                type="date"
-                                className={styles.input}
-                                value={editForm.date}
-                                onChange={(e) => handleInputChange('date', e.target.value)}
-                                title="Select post date"
-                            />
-                        </div>
+                    <TabsContent value="posts">
+                        <BlogPostManagement />
+                    </TabsContent>
 
-                        <div className={styles.formGroup}>
-                            <label className={styles.formLabel} htmlFor="edit-status">Status</label>
-                            <select
-                                id="edit-status"
-                                className={styles.input}
-                                value={editForm.status}
-                                onChange={(e) => handleInputChange('status', e.target.value)}
-                                title="Select post status"
-                            >
-                                <option value="draft">Draft</option>
-                                <option value="published">Published</option>
-                                <option value="archived">Archived</option>
-                            </select>
-                        </div>
+                    <TabsContent value="categories">
+                        <BlogCategoryManagement />
+                    </TabsContent>
 
-                        <div className={styles.actionButtons}>
-                            <button
-                                className={styles.editButton}
-                                onClick={handleSaveEdit}
-                            >
-                                Save Changes
-                            </button>
-                            <button
-                                className={styles.deleteButton}
-                                onClick={handleCancelEdit}
-                            >
-                                Cancel
-                            </button>
-                        </div>
-                    </div>
-                </>
-            )}
-
-            {/* Blog Posts Section */}
-            <div>
-                <h3 className={styles.sectionHeader}>Blog Posts</h3>
-                <DataTable
-                    columns={[
-                        { id: 'title', label: 'Title' },
-                        { id: 'author', label: 'Author' },
-                        { id: 'date', label: 'Date' },
-                        { id: 'status', label: 'Status' },
-                        { id: 'actions', label: 'Actions' },
-                    ]}
-                    rows={posts.map(post => ({
-                        ...post,
-                        actions: (
-                            <div className={styles.actionButtons}>
-                                <button
-                                    className={styles.editButton}
-                                    onClick={() => handlePostEdit(post.id)}
-                                >
-                                    Edit
-                                </button>
-                                <button
-                                    className={styles.deleteButton}
-                                    onClick={() => handlePostDelete(post.id)}
-                                >
-                                    Delete
-                                </button>
-                            </div>
-                        ),
-                    }))}
-                />
-            </div>
-
-            {/* Categories Section */}
-            <div>
-                <h3 className={styles.sectionHeader}>Categories</h3>
-                <DataTable
-                    columns={[
-                        { id: 'name', label: 'Name' },
-                        { id: 'description', label: 'Description' },
-                        { id: 'status', label: 'Status' },
-                        { id: 'actions', label: 'Actions' },
-                    ]}
-                    rows={categories.map(category => ({
-                        ...category,
-                        actions: (
-                            <div className={styles.actionButtons}>
-                                <button
-                                    className={styles.editButton}
-                                    onClick={() => handleCategoryEdit(category.id)}
-                                >
-                                    Edit
-                                </button>
-                                <button
-                                    className={styles.deleteButton}
-                                    onClick={() => handleCategoryDelete(category.id)}
-                                >
-                                    Delete
-                                </button>
-                            </div>
-                        ),
-                    }))}
-                />
-            </div>
-
-            {/* Tags Section */}
-            <div>
-                <h3 className={styles.sectionHeader}>Tags</h3>
-                <DataTable
-                    columns={[
-                        { id: 'name', label: 'Name' },
-                        { id: 'slug', label: 'Slug' },
-                        { id: 'actions', label: 'Actions' },
-                    ]}
-                    rows={tags.map(tag => ({
-                        ...tag,
-                        actions: (
-                            <div className={styles.actionButtons}>
-                                <button
-                                    className={styles.editButton}
-                                    onClick={() => handleTagEdit(tag.id)}
-                                >
-                                    Edit
-                                </button>
-                                <button
-                                    className={styles.deleteButton}
-                                    onClick={() => handleTagDelete(tag.id)}
-                                >
-                                    Delete
-                                </button>
-                            </div>
-                        ),
-                    }))}
-                />
-            </div>
+                    <TabsContent value="tags">
+                        <BlogTagManagement />
+                    </TabsContent>
+                </Tabs>
+            </motion.div>
         </div>
     );
 };
